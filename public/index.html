@@ -16,20 +16,18 @@
 	<script type="text/javascript">
 		var webSocket =
 			new WebSocket('ws://localhost:9090');
-		webSocket.onerror = function (event) {
-			onError(event)
-		};
-
-		webSocket.onopen = function (event) {
-			onOpen(event)
-		};
-
-		webSocket.onmessage = function (event) {
-			onMessage(event)
-		};
-
 		var text = document.getElementById('messages');
-		function onMessage(event) {
+		webSocket.onerror = function onError(event) {
+			text.innerHTML = '二维码已失效,请刷新后重试';
+		}
+
+
+		webSocket.onopen = function onOpen(event) {
+			text.innerHTML = '正在获取二维码';
+			webSocket.send('reg');
+		}
+
+		webSocket.onmessage = function onMessage(event) {
 			message = event.data;
 			if (message.indexOf('reg') == 0) {
 				createQRcode(message)
@@ -39,46 +37,21 @@
 			} else {
 				text.innerHTML = '二维码已失效,请刷新后重试';
 			}
-			console.log(event)
 		}
-
-		function onOpen(event) {
-			text.innerHTML = '正在获取二维码';
-			webSocket.send('reg');
-		}
-
-		function onError(event) {
-			text.innerHTML = '二维码已失效,请刷新后重试';
-		}
-
 		function createQRcode(message) {
 			console.log(message)
 			text.innerHTML = ''
 			$('#qrcode').qrcode(message);
-			// setTimeout(() => {
-			// 	if ($('#qrcode').is(":visible")) {
-			// 		$('#qrcode').hide();
-			// 		text.innerHTML = '二维码已失效,请刷新后重试'
-			// 	} 
-			// }, 30000)
 		}
 	</script>
 </body>
 <style>
 	body {
 		text-align: center;
-		height: 100%;
 	}
 
 	.container {
-		height: 100px;
-		/*元素的高度*/
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		/*元素的顶部边界离父元素的的位置是父元素高度的一半*/
-		margin-top: -50px;
-		/*设置元素顶边负边距，大小为元素高度的一半*/
+		margin-top: 100px;
 	}
 </style>
 

@@ -53,6 +53,7 @@ wss.on('connection', ws => {
             var login = parseInt(loginWS[1]);
             var loginSuccess = false;
             wss.clients.forEach(ws2 => {
+                console.log("websocket--"+ws2.extensions)
                 if (ws2.extensions == login) {
                     ws.send('loginSuccess')
                     ws2.send('loginSuccess')
