@@ -25,17 +25,17 @@ app.use(sessionParser);
 const server = http.createServer(app);
 // const wss = new WebSocket.Server({ port: 9090 }, server);
 const wss = new WebSocket.Server({
-    verifyClient: (info, done) => {
-        console.log('Parsing session from request...');
-        sessionParser(info.req, {}, () => {
-            console.log('Session is parsed!');
-            //
-            // We can reject the connection by returning false to done(). For example,
-            // reject here if user is unknown.
-            //
-            done(true);
-        });
-    },
+    // verifyClient: (info, done) => {
+    //     console.log('Parsing session from request...');
+    //     sessionParser(info.req, {}, () => {
+    //         console.log('Session is parsed!');
+    //         //
+    //         // We can reject the connection by returning false to done(). For example,
+    //         // reject here if user is unknown.
+    //         //
+    //         done(true);
+    //     });
+    // },
     server
 });
 var socketsid = 0;
@@ -53,7 +53,7 @@ wss.on('connection', ws => {
             var login = parseInt(loginWS[1]);
             var loginSuccess = false;
             wss.clients.forEach(ws2 => {
-                console.log("websocket--"+ws2.extensions)
+                console.log("websocket--" + ws2.extensions)
                 if (ws2.extensions == login) {
                     ws.send('loginSuccess')
                     ws2.send('loginSuccess')
