@@ -15,7 +15,7 @@
 	<script type="text/javascript" src="https://cdn.staticfile.org/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 	<script type="text/javascript">
 		var webSocket =
-			new WebSocket('ws://localhost:9090');
+			new WebSocket('ws://191.101.224.56:9090');
 		var text = document.getElementById('messages');
 		webSocket.onerror = function onError(event) {
 			text.innerHTML = '二维码已失效,请刷新后重试';
