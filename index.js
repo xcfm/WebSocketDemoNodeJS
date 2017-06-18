@@ -1,9 +1,44 @@
 const WebSocket = require('ws');
+const session = require('express-session');
+var express = require('express');
+const http = require('http');
 
-const wss = new WebSocket.Server({ port: 9090 });
-const sockets = new Map();
+var app = express();
+//
+// We need the same instance of the session parser in express and
+// WebSocket server.
+//
+const sessionParser = session({
+    saveUninitialized: false,
+    secret: '$eCuRiTy',
+    resave: false
+});
+//
+// Serve static files from the 'public' folder.
+//
+app.use(express.static('public'));
+app.use(sessionParser);
+
+//
+// Create HTTP server by ourselves.
+//
+const server = http.createServer(app);
+// const wss = new WebSocket.Server({ port: 9090 }, server);
+const wss = new WebSocket.Server({
+    verifyClient: (info, done) => {
+        console.log('Parsing session from request...');
+        sessionParser(info.req, {}, () => {
+            console.log('Session is parsed!');
+            //
+            // We can reject the connection by returning false to done(). For example,
+            // reject here if user is unknown.
+            //
+            done(true);
+        });
+    },
+    server
+});
 var socketsid = 0;
-
 wss.on('connection', ws => {
 
     ws.on('message', message => {
@@ -33,3 +68,4 @@ wss.on('connection', ws => {
     });
 
 });
+server.listen(9090, () => console.log('Listening on http://localhost:9090'));
