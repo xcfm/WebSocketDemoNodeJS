@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({ port: 9090 });
 const sockets = new Map();
 var socketsid = 0;
 
@@ -25,7 +25,7 @@ wss.on('connection', ws => {
                 }
             })
             if (!loginSuccess) {
-                ws.send('二维码已过期')
+                ws.send('二维码已过期,请刷新页面再试')
                 console.log('send:' + '二维码已过期')
             }
 
